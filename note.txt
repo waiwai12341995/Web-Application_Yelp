@@ -1,0 +1,420 @@
+Note of Web Development:
+
+(1) npm init
+
+(2) npm install express --save
+    var express = require("express");
+    var app = express();
+
+(3) npm install ejs --save
+    for ejs:
+        <%= %> -- render to the page and add to html e.g <%= 5+5 %>
+        <% %> -- logic (No need to add in html)
+        
+(4) Partial -- Template for <!DOCTYPE> ...
+
+(5) npm install body-parser --save
+    We want to extract data from server side
+    We need body-parser
+    var bodyParser = require("body-parser");
+    app.use(bodyParser.urlencoded({extended: true}))
+    
+API:
+======================================
+curl -- make request from command line
+curl http://google.com
+
+Request is designed to be the simplest way possible to make http calls. It supports HTTPS and follows redirects by default.
+    
+const request = require('request');
+request('http://www.google.com', function (error, response, body) {
+  console.log('error:', error); // Print the error if one occurred
+  console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+  console.log('body:', body); // Print the HTML for the Google homepage.
+});    
+
+body must be a javascript object
+
+npm install request
+
+
+DataBase (MongoDB):
+=======================================================
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
+echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.6 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.6.list
+sudo apt-get update
+sudo apt-get install -y mongodb-org
+
+mongo --version
+
+MEAN == Mongo Express Angular Node
+
+Install ... (do it outside workspace)
+mkdir data <-- Store all the information
+echo "mongod --dbpath=data --nojournal" > mongod  <---- Use new data directary
+chmod a+x mongod
+
+Start Mongo ... (Outer Workspace !!!)
+./mongod
+
+mongo -- open the mongoDB console
+
+Mongo Command
+=================================================
+show dbs
+.use -- Need to switch to our DB, use cat_app
+.show collections -- To ensure the collections is correct and use
+.insert -- Insert item say db.dogs.insert({name:"Baby", favourite:"Juice"})
+.find -- find specific item db.dogs.find({name:"Baby"})
+.update -- replace the former one by latter one X db.dogs.({name: "Baby"},{favourite:"Mango"})
+       -- Above one will replace the orginal data
+       -- (Correct one) db.dogs.update({name:"Baby"},{$set:{name:"BabyYan", isCute: true}})
+remove -- remove everything match db.dogs.remove({favourite:"Mango"})
+we can specify by db.dogs.remove({favourite:"Mango"}).limit()
+
+.drop() remove all the Data
+
+Mongoose:
+--> Elgant Object Modelling for node.js
+--> JS Code interact with DataBase
+
+npm uninstall mongoose
+npm install mongoose@{Latest Version} --save
+var mongoose = require("mongoose");
+mongoose.connect("mongodb://localhost:27017/cat_app",{useNewUrlParser: true});
+
+-Remember connect DB by mongo
+
+// Define Cat(Pattern) here 
+var catSchema = new mongoose.Schema({
+    name: String,
+    age: Number,
+    temperament: String
+});
+
+// catSchema Compile into model
+var Cat = mongoose.model("Cat", catSchema); // We can do Cat.create, find, remove
+
+
+(v2)
+Connect DB:
+======================================
+./mongod - 1st terminal
+
+mongo - 2nd terminal
+show dbs
+use yelp_camp
+show collections
+db.yelp_camp.{method}
+
+(v3)
+RESTful:
+
+RESTful Route:
+name            url     verb          desc        
+================================================
+INDEX ROUTE    /dogs    GET      Display of all dogs
+NEW           /dogs/new GET      Display
+CREATE         /dogs    POST    Add new dog to DB
+SHOW          /dogs/:id GET     Show info. about dog
+
+
+REST -- Architecture mapping between HTTP route and CRUD (CREATE, NEW, UPDATE, DESTORY)
+app.{route}
+RESTful -- is this pattern of route that we can follow
+--> It is reliable so that other who are working with our code
+--> Easy to understand (Like BluePrint)
+
+BLOG:
+=====
+CREATE
+READ    /allBlog
+UPDATE  /update/:id
+DESTORY /destoryBlog/:id
+
+Building Blog -- Semantic UI
+============================
+INDEX
+CREATE
+SHOW
+
+
+Method-Override package install
+HTML form t=dun support PUT request 
+
+<form class="ui form" action="/blogs/<%= blogs._id %>?_method=PUT" method="POST">
+
+var methodOverride = require("method-override")
+app.use(methodOverride("_method"))
+
+
+Delete Route:
+<form action="/blogs/<%= blog._id %>?_method=DELETE" method="POST">
+
+express-sanitizer: -- Make it clear
+npm install express-sanitizer --save
+
+Data Association:
+===============================
+Association of data
+-1 to 1
+-1 to many
+-many to many
+
+Embedding Data:
+===================
+refer embed.js
+
+Referecing Data:
+===================
+refer reference.js
+
+Module.Exports: -- break to separate file
+=========================================
+--> Clear Up code
+--> Make code module
+
+
+When referencing file path and directary, we will using
+./models/post
+
+Seed File:
+=========================================
+Everytime run the server can use these sample data
+
+
+Update mongoose in your node project to the latest version 5.1.3
+==========================================================
+
+npm uninstall mongoose
+npm i -S mongoose@5.1.3
+Update mongodb to version 3.6.5 (prefer a video with instructions? see here)
+
+To update from whatever version of mongodb you're using to mongodb 3.6.5 use the following commands*:
+
+killall mongod (in workspace)
+sudo apt-get purge -y mongodb-org*
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
+echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.6 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.6.list
+sudo apt-get update
+sudo apt-get install -y mongodb-org
+
+rm -rf mongod
+echo "mongod --dbpath=data --nojournal" > mongod
+chmod a+x mongod
+This assumes that the mongod* file you created and the data directory you created are in the same folder, this folder should be ~, but some students put it inside of ~/workspace which is fine too, just be sure mongod* and data are in the same folder.
+
+
+=============================================
+
+(v4)
+Comment New/Create
+
+
+RESTful:
+
+RESTful Route:
+name            url     verb          desc        
+================================================
+INDEX ROUTE    /dogs    GET      Display of all dogs
+NEW            /dogs/new GET      Display
+CREATE         /dogs    POST    Add new dog to DB
+SHOW           /dogs/:id GET     Show info. about dog
+
+INDEX ROUTE    /campgounds    
+NEW            /campgounds/new 
+CREATE         /campgounds   
+SHOW           /campgounds/:id 
+
+Nested Route
+NEW     campgounds/:id/comments/new     GET
+CREATE  campgounds/:id/comments     POST
+
+
+===
+v6
+===
+Authentication: (Difficult)
+===========================================
+-Passport JS (authentication)
+-Passport Local (user name and password)
+-->Many ways can login 
+-Passport Local Mongoose
+
+Same Session, will not logout
+HTTP is one time request
+using session
+make html provide state
+
+-Express Session
+
+npm install express-session
+npm install password 
+npm install password-local
+npm install password-local-mongoose
+
+
+vvar app = express();
+app.set("view engine", "ejs");
+app.use(bodyParser.urlencoded({extended: true}));
+
+app.use(require("express-session")({
+    secret: "Baby is the Best",
+    resave: false,
+    saveUninitialized: false
+}));
+// We need to use these 2 lines when we use passport
+app.use(passport.initialize());
+app.use(passport.session())
+
+//Reading the session taking data from the session that encode and uncode
+//unencode = deserialize
+//encode = serialize putting back to session
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser())
+
+//Handling user sign up
+app.post("/register", function(req, res){
+    req.body.username
+    req.body.password
+    User.register(new User({username: req.body.username}), req.body.password, function(err, user){
+        if(err){
+            console.log(err)
+            return res.render("register");
+        }
+        //lock the user in session & Store correct information
+        // We can use different strategy
+        passport.authenticate("local")(req, res, function(){
+            res.redirect("/secret");
+        })
+    })
+});
+
+
+hash -- what we store
+salt -- unhash it
+
+===
+v7
+===
+Refactoring the route
+
+// Route File
+var commentRoutes = require("./routes/comments");
+var campgoundRoute = require("./routes/campgrounds");
+var indexRoute = require("./routes/index")
+
+//Use those route file that we required
+app.use(indexRoute);
+app.use(campgoundRoute);
+app.use(commentRoutes);
+
+var express = require("express");
+var router = express.Router();
+var Campground = require("../models/campground")
+var Comment = require("../models/comment")
+var User = require("../models/user")
+
+module.exports = router;
+
+===
+v8
+===
+Association User + Comment
+====================================================
+//add username and id to comment
+comment.author.id = req.user._id;
+comment.author.username = req.user.username;
+        
+//save comment
+comment.save()
+
+Only Allow Signed in User to submit campground
+-Prevent unauthenticated user creating campground
+-->Protect post route and get route in ./routes/campgounds
+
+-Save username_id to newly created campground
+
+===
+v10
+===
+Get the better User Experience
+-edit the campgounds function
+
+npm install method-override
+
+v11
+display message
+req.flash("error", "Please login first");
+
+
+Error Handling:
+npm i -g nodemon
+nodemon app.js
+
+
+Deploy
+
+heroku login
+
+heroku login -i
+
+
+Git:
+git status
+git init
+
+git add ...
+git commit -m "initial commit"
+
+heroku create
+git remote -v
+git push heroku master
+
+heroku logs
+
+add   "start": "node app.js"  in package.json
+
+git add ...
+git commit -m "#message"
+git push heroku master
+
+
+
+
+When we start a huge project ...
+(1) git init
+(2) git status -- check ah
+(3) git add .
+(4) git commit -m "initial deploy commit"
+
+heroku create
+
+add "start": "node app.js" into package.json
+
+git add package.json
+
+git push heroku master -- push code to heroku 
+
+heroku logs
+
+heroku run ls
+heroku run ls node_modules
+heroku run npm install mongoose -- if didn't install
+
+If there are any changes ...
+git status
+git add ####
+git commit -m "####"
+git push heroku master
+
+
+heroku logs -- check ah any error occur for application
+
+Here is new database
+mongoose.connect("mongodb://fake:Iamfakegor1201@ds225205.mlab.com:25205/fishwebapp",{useNewUrlParser: true});
+
+
+Create new envornment var.
+export DATABASEURL="mongob://################"
+

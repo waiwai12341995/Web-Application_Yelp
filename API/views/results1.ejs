@@ -1,0 +1,7 @@
+<h1> Here is the result page</h1>
+
+<ul>
+<% data.forEach(function(bank){ %>
+    <li><%= bank["bank_info_name"] %> - <%= bank["bank_info_url"] %></li>
+<% }) %>
+</ul>

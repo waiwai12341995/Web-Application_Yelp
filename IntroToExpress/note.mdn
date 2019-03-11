@@ -1,0 +1,8 @@
+Express FrameWork is really useful
+
+FrameWork -- Do all the common stuff we needed in application, say basic need. We can focus on the main content
+Library --  collection of functionality that you can call.
+
+
+Write own route
+decide what will send back

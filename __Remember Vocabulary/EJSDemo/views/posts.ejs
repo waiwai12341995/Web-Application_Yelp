@@ -1,0 +1,21 @@
+<% include partials/header %>
+
+<h1>The Post Page</h1>
+
+<!--posts[i].title or posts[i]["title"] is also okay -->
+
+<% for(var i = 0; i < posts.length; i++){ %>
+    <li>
+        <%= posts[i].title %> - <strong><%=posts[i]["role"] %></strong>
+    </li>
+<% } %>
+
+<!--Second Method to do. Usually we use this way -->
+
+<% posts.forEach(function(post){ %>
+    <li>
+        <%= post.title %> - <strong><%= post["role"] %></strong>
+    </li>
+<% }) %>
+
+<% include partials/footer %>
